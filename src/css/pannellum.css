@@ -70,7 +70,8 @@
 
 .pnlm-render-container {
     cursor: inherit;
-    
+    z-index: -1;
+
     /* Fix display bug in Safari 7 */
     position: absolute;
     height: 100%;

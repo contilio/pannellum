@@ -158,7 +158,7 @@ container.appendChild(uiContainer);
 // Create container for renderer
 var renderContainer = document.createElement('div');
 renderContainer.className = 'pnlm-render-container';
-container.appendChild(renderContainer);
+uiContainer.appendChild(renderContainer);
 var dragFix = document.createElement('div');
 dragFix.className = 'pnlm-dragfix';
 uiContainer.appendChild(dragFix);
@@ -2071,7 +2071,16 @@ function renderHotSpot(hs) {
         var transform = 'translate(' + coord[0] + 'px, ' + coord[1] +
             'px) translateZ(9999px) rotate(' + config.roll + 'deg)';
         if (hs.scale) {
-            transform += ' scale(' + (origHfov/config.hfov) / z + ')';
+            switch (hs.scale) {
+                case 'perspective':
+                    var scaleX = hs.pitch * hfovTan / 10 * Math.min(1.0, canvasWidth / 480);
+                    var scaleY = Math.tan((-config.pitch + 90) / 180) * (1 / Math.tan(1)) * scaleX;
+                    transform += ' scale(' + scaleX + ',' + scaleY + ')';
+                    break;
+                default:
+                    transform += ' scale(' + (origHfov / config.hfov) / z + ')';
+                    break;
+            }
         }
         hs.div.style.webkitTransform = transform;
         hs.div.style.MozTransform = transform;
