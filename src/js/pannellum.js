@@ -1809,9 +1809,12 @@ function renderInit() {
 function renderInitCallback() {
     // Fade if specified
     if (config.sceneFadeDuration && renderer.fadeImg !== undefined) {
-        renderer.fadeImg.style.opacity = 0;
-        // Remove image
         var fadeImg = renderer.fadeImg;
+        fadeImg.style.opacity = 0;
+        if (typeof config.sceneFadeFunction === 'function') {
+            config.sceneFadeFunction(fadeImg, config.sceneFadeDuration);
+        }
+        // Remove image
         delete renderer.fadeImg;
         setTimeout(function() {
             renderContainer.removeChild(fadeImg);
@@ -2072,8 +2075,8 @@ function renderHotSpot(hs) {
             'px) translateZ(9999px) rotate(' + config.roll + 'deg)';
         if (hs.scale) {
             switch (hs.scale) {
-                case 'perspective':
-                    var scaleX = hs.pitch * hfovTan / 10 * Math.min(1.0, canvasWidth / 480);
+                case 'pitch':
+                    var scaleX = hs.pitch * (origHfov / config.hfov) / 5 * Math.min(1.0, canvasWidth / 480);
                     var scaleY = Math.tan((-config.pitch + 90) / 180) * (1 / Math.tan(1)) * scaleX;
                     transform += ' scale(' + scaleX + ',' + scaleY + ')';
                     break;
@@ -2491,7 +2494,7 @@ function loadScene(sceneId, targetPitch, targetYaw, targetHfov, fadeDone) {
             else
                 fadeImg = new Image(); // ImageBitmap isn't supported
             fadeImg.className = 'pnlm-fade-img';
-            fadeImg.style.transition = 'opacity ' + (config.sceneFadeDuration / 1000) + 's';
+            fadeImg.style.transition = 'all ' + (config.sceneFadeDuration / 1000) + 's linear';
             fadeImg.style.width = '100%';
             fadeImg.style.height = '100%';
             if (data.then) {
