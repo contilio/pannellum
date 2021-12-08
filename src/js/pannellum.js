@@ -741,16 +741,18 @@ function clearInteractionMessage() {
  * @param {MouseEvent} event - Right click location
  */
 function aboutMessage(event) {
-    var pos = mousePosition(event);
-    aboutMsg.style.left = pos.x + 'px';
-    aboutMsg.style.top = pos.y + 'px';
-    clearTimeout(aboutMessage.t1);
-    clearTimeout(aboutMessage.t2);
-    aboutMsg.style.display = 'block';
-    aboutMsg.style.opacity = 1;
-    aboutMessage.t1 = setTimeout(function() {aboutMsg.style.opacity = 0;}, 2000);
-    aboutMessage.t2 = setTimeout(function() {aboutMsg.style.display = 'none';}, 2500);
-    event.preventDefault();
+    if (config.contextMenuEnabled !== false) {
+        var pos = mousePosition(event);
+        aboutMsg.style.left = pos.x + 'px';
+        aboutMsg.style.top = pos.y + 'px';
+        clearTimeout(aboutMessage.t1);
+        clearTimeout(aboutMessage.t2);
+        aboutMsg.style.display = 'block';
+        aboutMsg.style.opacity = 1;
+        aboutMessage.t1 = setTimeout(function() {aboutMsg.style.opacity = 0;}, 2000);
+        aboutMessage.t2 = setTimeout(function() {aboutMsg.style.display = 'none';}, 2500);
+        event.preventDefault();
+    }
 }
 
 /**
